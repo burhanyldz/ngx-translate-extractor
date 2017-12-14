@@ -83,9 +83,10 @@ function getExtensionsArray(extensions){
                                    
                                 // content deki kurala uyanları array e at
                                 var occurances = content.match(new RegExp(escapedPrefix+"(.*?)"+escapedSuffix, "ig"));
-                                 console.log("occurances ", occurances);
                                 occurances.forEach(element => {
-                                    strings.push(element.replace(prefix, '').replace(suffix, ''));
+                                    var string = element.replace(prefix, '').replace(suffix, '');
+                                    strings.push(string);
+                                    console.log(string);
                                 });
                                 
     
@@ -104,5 +105,4 @@ function getExtensionsArray(extensions){
 
     });
 
-    console.log('found strings are ');
-    console.log(strings);
+    
