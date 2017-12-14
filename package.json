@@ -1,0 +1,28 @@
+{
+  "name": "translate-extractor",
+  "version": "0.0.1",
+  "description": "ngx-translate\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[C\u001b[C\u001b[C\u001b[C\u001b[C\u001b[Dextractor for ngx-translate",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "\u0016https://github.com/burhanyldz/translate-extractor.git"
+  },
+  "keywords": [
+    "ngx-translate",
+    "extractor"
+  ],
+  "author": "Burhan YILDIZ",
+  "license": "MIT",
+  "bin": {
+    "extractor": "./index.js"
+  },
+  "dependencies": {
+    "commander": "^2.12.2",
+    "escape-string-regexp": "^1.0.5",
+    "fs": "0.0.1-security",
+    "path": "^0.12.7"
+  }
+}
