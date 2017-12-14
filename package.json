@@ -1,7 +1,7 @@
 {
   "name": "translate-extractor",
   "version": "0.0.1",
-  "description": "ngx-translate\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[C\u001b[C\u001b[C\u001b[C\u001b[C\u001b[Dextractor for ngx-translate",
+  "description": "ngx-translate-extractor for ngx-translate",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
