@@ -1,5 +1,4 @@
 #!/usr/bin/env node
-
 var fs = require('fs');
 var path = require('path');
 var program = require('commander');
@@ -50,6 +49,37 @@ function getExtensionsArray(extensions) {
     return array;
 }
 
+function sortObj( obj, order ) {
+	"use strict";
+
+	var key,
+		tempArry = [],
+		i,
+		tempObj = {};
+
+	for ( key in obj ) {
+		tempArry.push(key);
+	}
+
+	tempArry.sort(
+		function(a, b) {
+			return a.toLowerCase().localeCompare( b.toLowerCase() );
+		}
+	);
+
+	if( order === 'desc' ) {
+		for ( i = tempArry.length - 1; i >= 0; i-- ) {
+			tempObj[ tempArry[i] ] = obj[ tempArry[i] ];
+		}
+	} else {
+		for ( i = 0; i < tempArry.length; i++ ) {
+			tempObj[ tempArry[i] ] = obj[ tempArry[i] ];
+		}
+	}
+
+	return tempObj;
+}
+
 
 var directory = program.dir || DIRECTORY;
 var prefix = program.prefix || PREFIX;
@@ -60,6 +90,8 @@ var extensionsArray = getExtensionsArray(extensions);
 console.log('Parsing translations in %s; prefix=%s suffix=%s extensions=%s ...', directory, prefix, suffix, extensions);
 
 var strings = [];
+var newTR = {};
+var newEN = {};
 
 var allDirectories = getDirectoriesRecursive(directory);
 
@@ -67,10 +99,8 @@ async.series([
 
     function(callback) {
         async.eachOf(allDirectories, function (directory, key, callback) {
- console.log("directory ", directory);
 
             fs.readdir(directory, (err, files) => {
- console.log("directory ", directory);
 
                 async.eachOf(files, function (file, key, callback) {
 
@@ -106,41 +136,103 @@ async.series([
                                         strings.push(string);
                                     }
                                 }
-
-                                
                             }
-
-
                             callback();
                         });
 
+                    }else{
+                        callback();
                     }
 
                 }, function (err) {
-                    if (err) return callback(rr);
+                    if (err) return callback(err);
                     callback();
         
                 });
 
             })
         }, function (err) {
- console.log("err ", err);
-            if (err) return callback(rr);
-            
- console.log("ended ");
+            if (err) return callback(err);            
             callback();
 
         });
     },
+
+
     function(callback) {
- console.log("callback ", callback);
-        console.log("strings", strings);
-        callback();
+        
+        fs.readFile('src/assets/i18n/tr.json', 'utf-8', function (err, content) {
+        tr = JSON.parse(content);
+            
+            async.eachOf(strings, function(string, key, callback){
+
+                if(tr[string] != undefined){
+                    newTR[string] = tr[string];
+                }else{
+                    newTR[string] = "";
+                }
+
+                callback();
+
+            },function(err){
+                if(err) return callback(err);
+                callback();
+            })
+
+            
+        });
+
+    },
+
+    function(callback){
+        var returnTR = sortObj(newTR);
+        var stringJSONTR = JSON.stringify(returnTR, null, "\t");
+        fs.writeFile('src/assets/i18n/tr.json', stringJSONTR, (err) => {
+            if (err) throw err;
+            console.log('The tr file has been saved!');
+            callback();
+          });
+        
+    },
+    function(callback) {
+        
+        fs.readFile('src/assets/i18n/en.json', 'utf-8', function (err, content) {
+        en = JSON.parse(content);
+            
+            async.eachOf(strings, function(string, key, callback){
+
+                if(tr[string] != undefined){
+                    newEN[string] = en[string];
+                }else{
+                    newEN[string] = "";
+                }
+
+                callback();
+
+            },function(err){
+                if(err) return callback(err);
+                callback();
+            })
+
+            
+        });
+
+    },
+
+    function(callback){
+        var returnEN = sortObj(newEN);
+        var stringJSONEN = JSON.stringify(returnEN, null, "\t");
+        fs.writeFile('src/assets/i18n/en.json', stringJSONEN, (err) => {
+            if (err) throw err;
+            console.log('The en file has been saved!');
+            callback();
+          });
+        
     }
     
 ],
 function(error) {
- console.log("error ", error);
- console.log("result ");
-
-    })
+    if(error) console.log(error);
+    
+    console.log("Successfully extracted "+strings.length+" keywords from "+allDirectories.length+" directories");
+});
